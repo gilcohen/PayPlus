@@ -18,6 +18,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 10.0.2.2 is the host machine's localhost as seen from the Android emulator.
+        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8030/\"")
     }
 
     buildTypes {
@@ -33,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
