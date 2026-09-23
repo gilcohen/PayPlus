@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PayPlus</string>
+    <string name="list_error">Couldn\'t load billing entries</string>
+    <string name="list_empty">No billing entries</string>
+    <string name="retry">Retry</string>
+    <string name="upload">Upload</string>
 </resources>

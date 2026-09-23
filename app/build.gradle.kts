@@ -20,7 +20,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // 10.0.2.2 is the host machine's localhost as seen from the Android emulator.
-        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8030/\"")
+        // On a physical device run `adb reverse tcp:8030 tcp:8030` and build with
+        // -Ppayplus.baseUrl=http://localhost:8030/
+        val baseUrl = providers.gradleProperty("payplus.baseUrl").getOrElse("http://10.0.2.2:8030/")
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
