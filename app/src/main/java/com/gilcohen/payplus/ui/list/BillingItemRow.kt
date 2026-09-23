@@ -155,7 +155,7 @@ private fun UploadButton(onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun BillingItemRowPreview() {
-    PayPlusTheme(dynamicColor = false) {
+    PayPlusTheme {
         Column {
             BillingItemRow(
                 item = BillingHeader(

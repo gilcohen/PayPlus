@@ -39,9 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,7 +48,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gilcohen.payplus.R
 import com.gilcohen.payplus.domain.model.BillingDetails
@@ -295,7 +295,7 @@ private fun DetailRow(@StringRes labelRes: Int, value: String) {
 @Preview(showBackground = true)
 @Composable
 private fun BillingDetailsScreenPreview() {
-    PayPlusTheme(dynamicColor = false) {
+    PayPlusTheme {
         BillingDetailsScreen(
             uiState = BillingDetailsUiState.Success(
                 BillingDetails(

@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
         )
         setContent {
-            PayPlusTheme(darkTheme = false, dynamicColor = false) {
+            PayPlusTheme {
                 PayPlusNavHost()
             }
         }

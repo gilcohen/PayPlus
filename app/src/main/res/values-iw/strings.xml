@@ -1,0 +1,32 @@
+<resources>
+    <string name="list_error">לא ניתן לטעון את רשימת החיובים</string>
+    <string name="list_empty">אין חיובים</string>
+    <string name="details_error">לא ניתן לטעון את פרטי החיוב</string>
+    <string name="retry">נסה שוב</string>
+    <string name="delete">מחק</string>
+    <string name="cancel">ביטול</string>
+    <string name="delete_dialog_title">למחוק את החיוב?</string>
+    <string name="delete_dialog_message">החיוב יימחק לצמיתות.</string>
+    <string name="delete_error">לא ניתן למחוק את החיוב</string>
+    <string name="upload">העלאה</string>
+    <string name="unknown_value">לא ידוע</string>
+
+    <string name="source_terminal">מסוף</string>
+    <string name="source_pos">קופה</string>
+    <string name="source_manual">ידני</string>
+
+    <string name="status_passed">עבר</string>
+    <string name="status_rejected">נדחה</string>
+
+    <string name="label_status">סטטוס:</string>
+    <string name="label_payment_type">סוג תשלום:</string>
+    <string name="label_card_number">מס. כרטיס:</string>
+    <string name="label_card_type">סוג כרטיס:</string>
+    <string name="label_issuer">חברת סליקה:</string>
+    <string name="label_source">מקור:</string>
+    <string name="label_terminal_name">שם מסוף:</string>
+    <string name="label_amount_paid">סכום שחויב:</string>
+    <string name="label_remaining">סכום נותר לחיוב:</string>
+    <string name="label_approval_number">מס. אישור:</string>
+    <string name="label_voucher_number">מס. רשומה:</string>
+</resources>
