@@ -12,6 +12,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,9 +29,20 @@ import com.gilcohen.payplus.ui.theme.LightGray
 @Composable
 fun BillingListRoute(
     onItemClick: (billingId: Long) -> Unit,
+    refreshRequested: Boolean,
+    onRefreshHandled: () -> Unit,
     viewModel: BillingListViewModel = viewModel(factory = BillingListViewModel.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Set when an entry was deleted on the details screen.
+    LaunchedEffect(refreshRequested) {
+        if (refreshRequested) {
+            viewModel.load()
+            onRefreshHandled()
+        }
+    }
+
     BillingListScreen(
         uiState = uiState,
         onItemClick = onItemClick,

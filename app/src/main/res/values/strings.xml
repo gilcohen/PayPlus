@@ -4,6 +4,11 @@
     <string name="list_empty">No billing entries</string>
     <string name="details_error">Couldn\'t load billing details</string>
     <string name="retry">Retry</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_dialog_title">Delete billing entry?</string>
+    <string name="delete_dialog_message">This billing entry will be permanently deleted.</string>
+    <string name="delete_error">Couldn\'t delete the billing entry</string>
     <string name="upload">Upload</string>
     <string name="not_available">—</string>
     <string name="unknown_value">Unknown</string>

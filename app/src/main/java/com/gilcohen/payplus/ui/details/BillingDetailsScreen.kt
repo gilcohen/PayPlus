@@ -14,16 +14,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +60,7 @@ import com.gilcohen.payplus.domain.model.BillingStatus
 import com.gilcohen.payplus.domain.model.Currency
 import com.gilcohen.payplus.ui.components.ErrorContent
 import com.gilcohen.payplus.ui.theme.DarkGray
+import com.gilcohen.payplus.ui.theme.DeletePink
 import com.gilcohen.payplus.ui.theme.LightGray
 import com.gilcohen.payplus.ui.theme.PayPlusTheme
 import com.gilcohen.payplus.ui.util.color
@@ -56,21 +75,55 @@ import com.gilcohen.payplus.ui.util.priceColor
 
 @Composable
 fun BillingDetailsRoute(
+    onDeleted: () -> Unit,
     viewModel: BillingDetailsViewModel = viewModel(factory = BillingDetailsViewModel.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val deleteErrorMessage = stringResource(R.string.delete_error)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val currentOnDeleted by rememberUpdatedState(onDeleted)
+
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.events.collect { event ->
+                when (event) {
+                    BillingDetailsEvent.Deleted -> currentOnDeleted()
+                    BillingDetailsEvent.DeleteFailed -> snackbarHostState.showSnackbar(deleteErrorMessage)
+                }
+            }
+        }
+    }
+
     BillingDetailsScreen(
         uiState = uiState,
+        snackbarHostState = snackbarHostState,
         onRetry = viewModel::load,
+        onDeleteConfirmed = viewModel::delete,
     )
 }
 
 @Composable
 fun BillingDetailsScreen(
     uiState: BillingDetailsUiState,
+    snackbarHostState: SnackbarHostState,
     onRetry: () -> Unit,
+    onDeleteConfirmed: () -> Unit,
 ) {
-    Scaffold { innerPadding ->
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            if (uiState is BillingDetailsUiState.Success) {
+                DeleteButton(
+                    isDeleting = uiState.isDeleting,
+                    onClick = { showDeleteDialog = true },
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,6 +138,58 @@ fun BillingDetailsScreen(
             }
         }
     }
+
+    if (showDeleteDialog) {
+        DeleteConfirmationDialog(
+            onConfirm = {
+                showDeleteDialog = false
+                onDeleteConfirmed()
+            },
+            onDismiss = { showDeleteDialog = false },
+        )
+    }
+}
+
+@Composable
+private fun DeleteButton(isDeleting: Boolean, onClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = { if (!isDeleting) onClick() },
+        shape = CircleShape,
+        containerColor = DeletePink,
+        contentColor = Color.White,
+    ) {
+        if (isDeleting) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = Color.White,
+                strokeWidth = 2.dp,
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Outlined.Delete,
+                contentDescription = stringResource(R.string.delete),
+            )
+        }
+    }
+}
+
+@Composable
+private fun DeleteConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.delete_dialog_title)) },
+        text = { Text(stringResource(R.string.delete_dialog_message)) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.delete), color = DeletePink)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 @Composable
@@ -94,7 +199,8 @@ private fun DetailsContent(details: BillingDetails) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            // Extra bottom space so the delete button never covers the last rows.
+            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 96.dp),
     ) {
         Header(details = details)
 
@@ -210,7 +316,9 @@ private fun BillingDetailsScreenPreview() {
                     voucherNumber = "23-333-343",
                 ),
             ),
+            snackbarHostState = remember { SnackbarHostState() },
             onRetry = {},
+            onDeleteConfirmed = {},
         )
     }
 }
