@@ -1,6 +1,5 @@
 package com.gilcohen.payplus.ui.details
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
@@ -21,11 +20,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class BillingDetailsViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val billingId: Long,
     private val repository: BillingRepository,
 ) : ViewModel() {
-
-    private val billingId: Long = savedStateHandle.toRoute<DetailsDestination>().billingId
 
     private val _uiState = MutableStateFlow<BillingDetailsUiState>(BillingDetailsUiState.Loading)
     val uiState: StateFlow<BillingDetailsUiState> = _uiState.asStateFlow()
@@ -70,7 +67,8 @@ class BillingDetailsViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as PayPlusApp
-                BillingDetailsViewModel(createSavedStateHandle(), app.container.billingRepository)
+                val billingId = createSavedStateHandle().toRoute<DetailsDestination>().billingId
+                BillingDetailsViewModel(billingId, app.container.billingRepository)
             }
         }
     }
