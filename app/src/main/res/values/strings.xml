@@ -2,6 +2,28 @@
     <string name="app_name">PayPlus</string>
     <string name="list_error">Couldn\'t load billing entries</string>
     <string name="list_empty">No billing entries</string>
+    <string name="details_error">Couldn\'t load billing details</string>
     <string name="retry">Retry</string>
     <string name="upload">Upload</string>
+    <string name="not_available">—</string>
+    <string name="unknown_value">Unknown</string>
+
+    <string name="source_terminal">Terminal</string>
+    <string name="source_pos">POS</string>
+    <string name="source_manual">Manual</string>
+
+    <string name="status_passed">Passed</string>
+    <string name="status_rejected">Rejected</string>
+
+    <string name="label_status">Status:</string>
+    <string name="label_payment_type">Payment type:</string>
+    <string name="label_card_number">Card number:</string>
+    <string name="label_card_type">Card type:</string>
+    <string name="label_issuer">Issuer:</string>
+    <string name="label_source">Source:</string>
+    <string name="label_terminal_name">Terminal name:</string>
+    <string name="label_amount_paid">Amount paid:</string>
+    <string name="label_remaining">Remaining:</string>
+    <string name="label_approval_number">Approval number:</string>
+    <string name="label_voucher_number">Voucher number:</string>
 </resources>

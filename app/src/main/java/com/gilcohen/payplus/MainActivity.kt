@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.gilcohen.payplus.ui.list.BillingListRoute
+import com.gilcohen.payplus.ui.navigation.PayPlusNavHost
 import com.gilcohen.payplus.ui.theme.PayPlusTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,8 +19,7 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             PayPlusTheme(darkTheme = false, dynamicColor = false) {
-                // Navigation to the details screen is added in the next stage.
-                BillingListRoute(onItemClick = {})
+                PayPlusNavHost()
             }
         }
     }
